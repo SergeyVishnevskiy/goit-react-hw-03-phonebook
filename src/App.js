@@ -1,16 +1,11 @@
 import styles from "./App.module.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AddContact from "./AddContact/AddContact";
 import AllContacts from "./AllContacts/AllContacts";
 import FilterContacts from "./FilterContacts/FilterContacts";
 
 function App() {
-  const [contacts, setContacts] = useState([
-    { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-    { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-    { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-    { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-  ]);
+  const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState("");
 
   const inputFilter = ({ target }) => {
@@ -19,8 +14,23 @@ function App() {
 
   const deleteContact = (id) => {
     setContacts((state) => state.filter((item) => item.id !== id));
+    const localArr = JSON.parse(localStorage.getItem("localContacts"));
+    const newArr = localArr.filter((item) => item.id !== id);
+    localStorage.setItem("localContacts", JSON.stringify(newArr));
   };
 
+  useEffect(() => {
+    if (!localStorage.getItem("localContacts")) {
+      localStorage.setItem("localContacts", JSON.stringify([]));
+    }
+    if (
+      JSON.parse(localStorage.getItem("localContacts")).length !==
+      contacts.length
+    ) {
+      setContacts((state) => JSON.parse(localStorage.getItem("localContacts")));
+    }
+    //  [contacts.length];
+  });
   return (
     <div className={styles.wrapper}>
       <h1 className={styles.titlePhonebook}>Phonebook</h1>

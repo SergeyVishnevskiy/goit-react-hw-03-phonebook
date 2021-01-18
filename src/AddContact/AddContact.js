@@ -22,8 +22,12 @@ const Phonebook = ({ setContacts, contacts }) => {
       alert(`${name} is already in contacts.`);
       return;
     }
+    localStorage.setItem(
+      "localContacts",
+      JSON.stringify([...contacts, { name, number, id: uuidv4() }])
+    );
 
-    setContacts((state) => [...state, { name, number, id: uuidv4() }]);
+    setContacts([]);
     setName("");
     setNumber("");
   };
